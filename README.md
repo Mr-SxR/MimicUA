@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,4,6,8,10&height=230&section=header&text=MimicUA&fontSize=52&fontColor=ffffff&fontAlignY=38&desc=Professional%20Dual-Layer%20User-Agent%20Switcher%20%26%20Device%20Emulator&descSize=18&descAlignY=62&animation=fadeIn" width="100%" alt="MimicUA Header Banner" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0,2,4,6,8,10&height=230&section=header&text=MimicUA&fontSize=52&fontColor=ffffff&fontAlignY=38&desc=Dual-Layer%20User-Agent%20Switcher%20%7C%20Device%20Emulator&descSize=18&descAlignY=62&animation=fadeIn" width="100%" alt="MimicUA Header Banner" />
 
   <p align="center">
     <a href="https://github.com/Mr-SxR/MimicUA/releases/tag/v2.0.0">
