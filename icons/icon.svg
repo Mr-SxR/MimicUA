@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <!-- Background Card -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+
+    <!-- Cyan Arc Gradient -->
+    <linearGradient id="cyanArc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Violet/Magenta Arc Gradient -->
+    <linearGradient id="purpleArc" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+
+    <!-- Center Diamond Gradient -->
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+
+    <!-- Subtle Ambient Glow -->
+    <filter id="ambientGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Dark Squircle -->
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#bgGrad)" stroke="#1e293b" stroke-width="2" />
+  
+  <!-- Outer Subtle Tech Ring -->
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.4" />
+
+  <!-- Cyan Switch Loop (Desktop / Origin) -->
+  <path d="M 64 26 C 84.98 26 102 43.02 102 64 C 102 73.5 98.5 82.2 92.7 88.9 C 88.5 76 74 65 64 65 C 54 65 48 55 48 45 C 48 34.5 55.2 26 64 26 Z"
+        fill="url(#cyanArc)" filter="url(#ambientGlow)" opacity="0.95" />
+
+  <!-- Violet/Pink Switch Loop (Mobile / Target Persona) -->
+  <path d="M 64 102 C 43.02 102 26 84.98 26 64 C 26 54.5 29.5 45.8 35.3 39.1 C 39.5 52 54 63 64 63 C 74 63 80 73 80 83 C 80 93.5 72.8 102 64 102 Z"
+        fill="url(#purpleArc)" filter="url(#ambientGlow)" opacity="0.95" />
+
+  <!-- Center Core Aperture (Identity Shift Nexus) -->
+  <circle cx="64" cy="64" r="14" fill="#0f172a" stroke="#1e293b" stroke-width="2.5" />
+  <circle cx="64" cy="64" r="8" fill="url(#coreGrad)" />
+
+  <!-- Central High-Tech Highlight Dot -->
+  <circle cx="62" cy="62" r="2.5" fill="#ffffff" />
+
+  <!-- Node Anchors (Multi-Device Emulation Dots) -->
+  <circle cx="64" cy="22" r="3" fill="#38bdf8" />
+  <circle cx="64" cy="106" r="3" fill="#ec4899" />
+  <circle cx="106" cy="64" r="2.5" fill="#38bdf8" opacity="0.7" />
+  <circle cx="22" cy="64" r="2.5" fill="#ec4899" opacity="0.7" />
+</svg>

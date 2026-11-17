@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MimicUA</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-main">
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 128 128" width="22" height="22" aria-hidden="true">
+          <rect x="8" y="8" width="112" height="112" rx="28" fill="#0c121e" stroke="#1e293b" stroke-width="2"/>
+          <path d="M 64 26 C 85 26 102 43 102 64 C 102 74 98 82 92 88 C 88 76 74 65 64 65 C 54 65 48 55 48 45 C 48 35 55 26 64 26 Z" fill="#38bdf8"/>
+          <path d="M 64 102 C 43 102 26 85 26 64 C 26 54 30 46 36 40 C 40 52 54 63 64 63 C 74 63 80 73 80 83 C 80 93 73 102 64 102 Z" fill="#ec4899"/>
+          <circle cx="64" cy="64" r="14" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+          <circle cx="64" cy="64" r="8" fill="#38bdf8"/>
+          <circle cx="62" cy="62" r="2.5" fill="#ffffff"/>
+        </svg>
+        <span class="brand-title">MimicUA</span>
+      </div>
+
+      <div class="header-actions">
+        <div class="status-indicator" id="statusPill" title="Current spoofing state">
+          <span class="status-dot"></span>
+          <span class="status-label" id="statusLabel">Default</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active User-Agent Banner -->
+    <div class="active-bar" id="activeBar" style="display: none;">
+      <div class="active-meta">
+        <span class="active-badge">Active</span>
+        <span class="active-name" id="activeNameText">--</span>
+      </div>
+      <div class="active-controls">
+        <button class="btn-icon" id="btnReloadTab" title="Reload Active Tab" aria-label="Reload Active Tab">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"/>
+            <polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+        <button class="btn-reset" id="btnResetUa" title="Restore Default Browser Identity">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Global Search -->
+    <div class="search-container">
+      <svg class="search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search OS, browser, device, or bot..." autocomplete="off" spellcheck="false">
+      <div class="search-right-wrap">
+        <span class="kbd-hint" id="kbdHint">ESC</span>
+        <button class="clear-btn" id="btnClearSearch" title="Clear search" aria-label="Clear search">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Segmented Navigation Tab Bar -->
+  <nav class="nav-tabs" aria-label="Main Navigation">
+    <div class="nav-tabs-track">
+      <button class="tab-btn active" data-tab="presets">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span>Presets</span>
+      </button>
+      <button class="tab-btn" data-tab="favorites">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span>Favorites</span>
+        <span class="counter-badge" id="favCount">0</span>
+      </button>
+      <button class="tab-btn" data-tab="custom">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        <span>Custom</span>
+        <span class="counter-badge" id="customCount">0</span>
+      </button>
+      <button class="tab-btn" data-tab="settings">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Settings</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Views Container -->
+  <main class="views-wrapper">
+    <!-- VIEW 1: Presets -->
+    <section class="view-panel active" id="viewPresets">
+      <div class="presets-layout">
+        <aside class="categories-col">
+          <div class="col-header">
+            <span>Categories</span>
+            <span class="count-pill" id="catTotalBadge">10</span>
+          </div>
+          <div class="col-list" id="categoryList"></div>
+        </aside>
+
+        <section class="items-col">
+          <div class="col-header" id="itemsColHeader">
+            <span id="currentCatTitle">Select Category</span>
+            <span class="count-pill" id="itemCountBadge">0</span>
+          </div>
+          <div class="col-list" id="presetsList"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- VIEW 2: Favorites -->
+    <section class="view-panel" id="viewFavorites">
+      <div class="panel-inner">
+        <div class="panel-section-title">
+          <span>Pinned Profiles</span>
+          <span class="subtext">Click any profile to instantly switch</span>
+        </div>
+        <div class="favorites-list" id="favoritesList"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: Custom -->
+    <section class="view-panel" id="viewCustom">
+      <div class="panel-inner">
+        <div class="custom-card">
+          <h3 class="card-title" id="customFormTitle">Add Custom User-Agent</h3>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="customName">Profile Name</label>
+              <input type="text" id="customName" placeholder="e.g. Chrome on Windows ARM" maxlength="60">
+            </div>
+            <div class="form-field">
+              <label for="customPlatform">Platform (navigator.platform)</label>
+              <input type="text" id="customPlatform" placeholder="e.g. Win32, MacIntel, Linux x86_64, iPhone" maxlength="40">
+            </div>
+            <div class="form-field full-width">
+              <label for="customUaString">User-Agent String</label>
+              <textarea id="customUaString" rows="3" placeholder="Paste full User-Agent string here..." spellcheck="false"></textarea>
+            </div>
+            <div class="form-field-row full-width">
+              <label class="checkbox-label">
+                <input type="checkbox" id="customIsMobile">
+                <span>Emulate Mobile Device (mobile: true)</span>
+              </label>
+            </div>
+            <div class="form-actions full-width">
+              <button class="btn-secondary" id="btnCancelEdit" style="display: none;">Cancel</button>
+              <button class="btn-primary" id="btnSaveCustom">Save Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="saved-custom-header">
+          <span>Saved Custom Profiles</span>
+          <span class="count-pill" id="savedCustomCount">0</span>
+        </div>
+        <div class="custom-list" id="customItemsList"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: Settings -->
+    <section class="view-panel" id="viewSettings">
+      <div class="panel-inner settings-inner">
+        <!-- Emulation Controls -->
+        <div class="settings-group">
+          <div class="group-title">Emulation Engine</div>
+
+          <label class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Deep JavaScript Emulation</span>
+              <span class="setting-desc">Spoofs navigator.userAgent, platform, vendor, and Client Hints API in page context</span>
+            </div>
+            <input type="checkbox" id="toggleDeepEmulation" class="toggle-switch">
+          </label>
+
+          <label class="setting-row">
+            <div class="setting-info">
+              <span class="setting-label">Auto-Reload Active Tab</span>
+              <span class="setting-desc">Automatically refreshes current page when switching User-Agents</span>
+            </div>
+            <input type="checkbox" id="toggleAutoReload" class="toggle-switch">
+          </label>
+        </div>
+
+        <!-- Native Diagnostics Card -->
+        <div class="settings-group">
+          <div class="group-title">Current Environment Diagnostics</div>
+          <div class="diag-card">
+            <div class="diag-row">
+              <span class="diag-key">Default Platform:</span>
+              <span class="diag-val" id="diagPlatform">--</span>
+            </div>
+            <div class="diag-row">
+              <span class="diag-key">Default Vendor:</span>
+              <span class="diag-val" id="diagVendor">--</span>
+            </div>
+            <div class="diag-row full-col">
+              <div class="diag-header-action">
+                <span class="diag-key">Native User-Agent:</span>
+                <button class="copy-diag-btn" id="btnCopyNativeUa" title="Copy Native User-Agent">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  <span>Copy</span>
+                </button>
+              </div>
+              <code class="diag-code" id="diagNativeUa">--</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Backup & Restore -->
+        <div class="settings-group">
+          <div class="group-title">Backup & Restore</div>
+          <div class="backup-actions">
+            <button class="btn-outline" id="btnExportData">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>Export Profiles JSON</span>
+            </button>
+            <label class="btn-outline file-btn">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <span>Import JSON</span>
+              <input type="file" id="importFileInput" accept=".json" style="display: none;">
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Interactive Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Footer Info -->
+  <footer class="app-footer">
+    <div class="footer-left">
+      <span class="footer-brand">MimicUA</span>
+      <span class="version-tag">v2.0.0</span>
+    </div>
+    <div class="footer-right">
+      <span class="footer-stats" id="totalPresetStats">Loading presets...</span>
+    </div>
+  </footer>
+
+  <script src="../data/user-agents.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
